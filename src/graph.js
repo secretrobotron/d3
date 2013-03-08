@@ -43,6 +43,8 @@
     var onclick = options.onclick || function(){};
     var onchange = options.onchange || function(){};
 
+    var currentTree;
+
     function drawSubTree(d) {
       var transitioning = false;
 
@@ -146,6 +148,11 @@
 
         var t1 = g1.transition().duration(200);
         var t2 = g2.transition().duration(200);
+        var t3;
+
+        if(currentTree){
+          t3 = currentTree.transition().duration(200);
+        }
 
         // Update the domain only after entering new elements.
         xScale.domain([d.x, d.x + d.dx]);
@@ -172,12 +179,18 @@
         t2.selectAll(".textdiv").style("display", "block"); /* added */
         t2.selectAll(".foreignobj").call(foreign); /* added */      
 
+        if(currentTree){
+          console.log(currentTree);
+          currentTree.remove();
+        }
+
         // Remove the old node when the transition is finished.
         t1.remove().each("end", function() {
           svg.style("shape-rendering", "crispEdges");
-          transitioning = false;               
+          transitioning = false;
+          currentTree = g2;
         });
-        
+      
         return g2;
 
       }//endfunc transition
