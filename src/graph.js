@@ -180,7 +180,6 @@
         t2.selectAll(".foreignobj").call(foreign); /* added */      
 
         if(currentTree){
-          console.log(currentTree);
           currentTree.remove();
         }
 
@@ -262,20 +261,29 @@
 
         collectChildren(root);
 
-        function step(node){
-          var next = ctx.transition(node);
-          var element = next[0].parentNode.querySelector('.parent');
-          element.classList.add('pulsing');
-          setTimeout(function(){
-            element.classList.remove('pulsing');
-            if(childrenStack.length){
-              step(childrenStack.shift());
-            }
-          }, PRETRANSITION_DELAY);
+        function step(node, nextNode){
+          if(!node.children){ return };
+          var g = ctx.transition(node);
+          var element;
+
+          if(nextNode){
+            Array.prototype.forEach.call(g[0], function(child){
+              if(child.__data__.name === nextNode.name){
+                element = child.querySelector('.parent');
+              }
+            });
+
+            element.classList.add('pulsing');
+            setTimeout(function(){
+              element.classList.remove('pulsing');
+              if(childrenStack.length){
+                step(childrenStack.shift(), childrenStack[0]);
+              }
+            }, PRETRANSITION_DELAY);
+          }
         }
 
-        childrenStack.shift();
-        step(childrenStack.shift());
+        step(childrenStack.shift(), childrenStack[0]);
       }
     }
   };

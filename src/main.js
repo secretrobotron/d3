@@ -38,7 +38,6 @@
   }, false);
 
   function init(inputData){
-    console.log(inputData);
     var butterTrack;
 
     var currentPath = 'root';
@@ -163,7 +162,7 @@
       }
     }
 
-    var graph = demo.createGraph(gtty.parseData(inputData), '.graph-container', {
+    var graph = demo.createGraph(gtty.parseData(inputData), '.graph', {
       onclick: function(d){
       },
       onchange: function(d){
@@ -186,7 +185,7 @@
               graph.navigateTo(path);
             }
           },
-          path: currentPath
+          path: currentPath + ""
         }
       });
 
